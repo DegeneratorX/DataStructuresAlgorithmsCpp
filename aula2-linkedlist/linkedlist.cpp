@@ -36,6 +36,17 @@ class LinkedList{
             }
         }
 
+        Node* search(int value){
+            Node* temp = this->head;
+            while(temp != nullptr){
+                if (temp->value == value){
+                    return temp;
+                }
+                temp = temp->next;
+            }
+            return nullptr;
+        }
+
         void getHead(){
             cout << "Head: " << head->value << endl;
         }
@@ -48,7 +59,7 @@ class LinkedList{
             cout << "Length: " << length << endl;
         }
 
-        void append(int value){
+        void addLast(int value){ // O(1), método próprio usando tail como referência.
             Node* newNode = new Node(value);
             if (this->length == 0){
                 this->head = newNode;
@@ -61,29 +72,94 @@ class LinkedList{
             this->length += 1;
         }
 
-        Node* pop(){
+        void addLastWithoutTail(int value){  // O(n), método do Rudini. Economiza memória, não usa Tail para guardar. Precisa iterar pra achar o anterior do removido.
+            Node* newNode = new Node(value);
+            Node* temp = this->head;
+            if (this->length == 0){
+                this->head = newNode;
+                this->tail = newNode;
+            }
+            else{
+                while(temp->next != nullptr){
+                    temp = temp->next;
+                }
+                temp->next = newNode;
+                this->tail = newNode;
+            }
+        }
+
+        Node* removeLast(){  //O(n), usa o tail como referência.
             Node* temp = this->head;
             if (this->length == 0){
                 return nullptr;
             }
-            else if (this->length == 1){
+
+            Node* tailGuardado = this->tail; // Guardo o nó que será removido.
+
+            if (this->length == 1){
                 this->head = nullptr;
                 this->tail = nullptr;
                 this->length -= 1;
-                return temp;
+                return tailGuardado;
             } 
             else {
-                while(temp->next != nullptr){
-                    //TODO
+                while(temp->next->next != nullptr){
+                    temp = temp->next;
                 }
+                temp->next = nullptr;
+                this->tail = temp;
+                this->length -= 1;
+                return tailGuardado;
             }
+        }
+
+        Node* removeLastWithoutTail(){  //O(n), economiza memória ao não usar o tail como referência.
+            
+            if (this->length == 0){
+                return nullptr;
+            }
+
+            Node* temp = this->head;
+
+            if (length == 1){
+                this->head = nullptr;
+                this->tail = nullptr;
+                return temp;
+            }
+            
+            Node* prev = this->head;
+            while(temp->next != nullptr){
+                prev = temp;
+                temp = temp->next;
+            }
+            tail = prev;
+            tail->next = nullptr;
+            this->length -= 1;
+            return temp;
         }
 };
 
 int main(){
     LinkedList* ListaEncadeada = new LinkedList(4);
 
-    ListaEncadeada->append(2);
-    ListaEncadeada->printList();
+    ListaEncadeada->addLast(2);
+    ListaEncadeada->addLast(10);
+    ListaEncadeada->addLast(8);
+    ListaEncadeada->addLast(15);
+    ListaEncadeada->addLastWithoutTail(200);
+
+    // cout << ListaEncadeada->removeLast()->value << endl;
+    
+    cout << ListaEncadeada->removeLastWithoutTail()->value << endl;
+    cout << ListaEncadeada->removeLastWithoutTail()->value << endl;
+    cout << ListaEncadeada->removeLast()->value << endl;
+    cout << ListaEncadeada->removeLast()->value << endl;
+    cout << ListaEncadeada->removeLast()->value << endl;
+    cout << ListaEncadeada->removeLastWithoutTail()->value << endl;
+
+    cout << endl;
+    
+
+    //ListaEncadeada->printList();
 
 }
