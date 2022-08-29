@@ -86,10 +86,13 @@ class LinkedList{
                 temp->next = newNode;
                 this->tail = newNode;
             }
+            this->length += 1;
         }
 
         Node* removeLast(){  //O(n), usa o tail como referência.
+
             Node* temp = this->head;
+
             if (this->length == 0){
                 return nullptr;
             }
@@ -115,21 +118,22 @@ class LinkedList{
 
         Node* removeLastWithoutTail(){  //O(n), economiza memória ao não usar o tail como referência.
             
+            Node* temp = this->head;
+
             if (this->length == 0){
                 return nullptr;
             }
-
-            Node* temp = this->head;
-
+            
             if (length == 1){
                 this->head = nullptr;
                 this->tail = nullptr;
                 return temp;
             }
             
-            Node* prev = this->head;
+            Node* prev = this->head;  // Crio outra variável que aponta pro mesmo lugar onde a cabeça aponta
+
             while(temp->next != nullptr){
-                prev = temp;
+                prev = temp;  // prev sempre ficará antes de temp.
                 temp = temp->next;
             }
             tail = prev;
